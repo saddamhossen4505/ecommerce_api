@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
+import roleRoute from "./routes/roleRoute.js";
 import { mongoDbConnection } from "./config/db.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
@@ -33,6 +34,7 @@ app.use(express.static("public"));
 // Routes.
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/role", roleRoute);
 
 // errorHandler.
 app.use(errorHandler);

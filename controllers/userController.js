@@ -38,7 +38,7 @@ export const getSingleUser = asyncHandler(async (req, res) => {
 
 /**
  * @desc Create user.
- * @method GET
+ * @method POST
  * @route /api/v1/user
  * @access Public
  */
