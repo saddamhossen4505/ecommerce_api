@@ -6,6 +6,7 @@ import {
   getAllRole,
   getSingleRole,
   updateRole,
+  updateRoleStatus,
 } from "../controllers/roleController.js";
 
 // Init Router.
@@ -22,6 +23,8 @@ router
   .delete(deleteRole)
   .put(updateRole)
   .patch(updateRole);
+
+router.route("/status/:id").put(updateRoleStatus);
 
 // Export router.
 export default router;

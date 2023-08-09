@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
 import roleRoute from "./routes/roleRoute.js";
+import permissionRoute from "./routes/permissionRoute.js";
 import { mongoDbConnection } from "./config/db.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
@@ -35,6 +36,7 @@ app.use(express.static("public"));
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/role", roleRoute);
+app.use("/api/v1/permission", permissionRoute);
 
 // errorHandler.
 app.use(errorHandler);

@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Role from "../models/RoleModels.js";
-import bcrypt from "bcrypt";
 import { createSlug } from "../helpers/createSlug.js";
 
 /**
@@ -13,9 +12,8 @@ export const getAllRole = asyncHandler(async (req, res) => {
   const roles = await Role.find();
 
   if (roles.length === 0) {
-    return res.status(404).json({ message: "No roles found." });
+    return res.status(404).json({ message: "" });
   }
-
   res.status(200).json(roles);
 });
 
@@ -45,7 +43,7 @@ export const getSingleRole = asyncHandler(async (req, res) => {
  */
 export const createRole = asyncHandler(async (req, res) => {
   // Get Data.
-  const { name } = req.body;
+  const { name, permissions } = req.body;
 
   // Validation.
   if (!name) {
@@ -59,8 +57,9 @@ export const createRole = asyncHandler(async (req, res) => {
   const role = await Role.create({
     name,
     slug: createSlug(name),
+    permissions,
   });
-  res.status(200).json(role);
+  res.status(200).json({ role, message: "Role created successful." });
 });
 
 /**
@@ -89,19 +88,43 @@ export const deleteRole = asyncHandler(async (req, res) => {
  */
 export const updateRole = asyncHandler(async (req, res) => {
   // Get Data.
-  const { name } = req.body;
-
+  const { name, permissions } = req.body;
   // Get id.
   const { id } = req.params;
-
   // updateUser.
-  const role = await Role.findByIdAndUpdate(
+  const updateRole = await Role.findByIdAndUpdate(
     id,
     {
       name,
       slug: createSlug(name),
+      permissions,
     },
     { new: true }
   );
-  res.status(200).json(role);
+  res.status(200).json({ updateRole, message: "Role updated successful." });
+});
+
+/**
+ * @desc UpdateRoleStatus
+ * @method PUT/PATCH
+ * @route /api/v1/role/status:id
+ * @access Public
+ */
+export const updateRoleStatus = asyncHandler(async (req, res) => {
+  // Get Data.
+  const { status } = req.body;
+  // Get id.
+  const { id } = req.params;
+
+  // updateUser.
+  const roleStatus = await Role.findByIdAndUpdate(
+    id,
+    {
+      status: !status,
+    },
+    { new: true }
+  );
+  res
+    .status(200)
+    .json({ roleStatus, message: "Role status updated successful." });
 });
