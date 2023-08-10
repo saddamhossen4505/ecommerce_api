@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 const authMiddleware = (req, res, next) => {
   // Check Cookies.
   const accessToken = req.cookies.accessToken;
-
   // Validation.
   if (!accessToken) {
     return res.status(400).json({ message: "Unauthorized" });

@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
 // SendMail.
-export const mailSend = async (to, data) => {
+export const userInfoMail = async (to, data) => {
   try {
     // Create Transport.
     const transport = nodemailer.createTransport({
@@ -17,7 +17,7 @@ export const mailSend = async (to, data) => {
     await transport.sendMail({
       from: `SIDRAT_IT <${process.env.MAIL_ID}>`,
       to: to,
-      subject: "Account activation mail",
+      subject: "Join our team SIDRAT-IT",
       html: `
             <!DOCTYPE html>
             <html lang="en">
@@ -141,8 +141,9 @@ export const mailSend = async (to, data) => {
                         </div>
                         <div class="content">
                             <h3>Hi, ${data.name}</h3>
-                            <p>You are wellcome to our community. Please Verify your E-mail address for activation your account.</p>
-                            <a href="${data.link}">Verify-Now</a>
+                            <p>You are wellcome to our community. Please Join our team for this info.</p>
+                            <h3> Email : ${to}</h3>
+                            <h3> Password : ${data.password}</h3>
                         </div>
                         <div class="info">
                             <span>Accout-Info</span>

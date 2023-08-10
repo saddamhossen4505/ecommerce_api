@@ -5,6 +5,7 @@ import {
   getAllUser,
   getSingleUser,
   updateUser,
+  updateUserStatus,
 } from "../controllers/userController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
@@ -12,7 +13,7 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 // Use authMiddleware.
-router.use(authMiddleware)
+router.use(authMiddleware);
 
 // Routes.
 router.route("/").get(getAllUser).post(createUser);
@@ -22,6 +23,7 @@ router
   .delete(deleteUser)
   .put(updateUser)
   .patch(updateUser);
+router.route("/status/:id").put(updateUserStatus);
 
 // Export router.
 export default router;

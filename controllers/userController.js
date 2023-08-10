@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/UserModels.js";
 import bcrypt from "bcrypt";
+import { userInfoMail } from "../utils/userInfoMail.js";
 
 /**
  * @desc GetAllUser
@@ -11,11 +12,9 @@ import bcrypt from "bcrypt";
 export const getAllUser = asyncHandler(async (req, res) => {
   const users = await User.find();
 
-  if (users.length === 0) {
-    return res.status(404).json({ message: "User Not Found." });
+  if (users.length > 0) {
+    res.status(200).json({ users });
   }
-
-  res.status(200).json(users);
 });
 
 /**
@@ -44,10 +43,10 @@ export const getSingleUser = asyncHandler(async (req, res) => {
  */
 export const createUser = asyncHandler(async (req, res) => {
   // Get Data.
-  const { name, email, password } = req.body;
+  const { name, email, role, password } = req.body;
 
   // Validation.
-  if (!name || !email || !password) {
+  if (!name || !email || !role || !password) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -61,9 +60,14 @@ export const createUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     name,
     email,
+    role,
     password: hashPassword,
+    isVerify: true,
   });
-  res.status(200).json(user);
+
+  userInfoMail(email, { name, password });
+
+  res.status(200).json({ user, message: "User created successful." });
 });
 
 /**
@@ -92,25 +96,48 @@ export const deleteUser = asyncHandler(async (req, res) => {
  */
 export const updateUser = asyncHandler(async (req, res) => {
   // Get Data.
-  const { name, email, mobile, gender, password } = req.body;
+  const { name, email, mobile, gender, role } = req.body;
 
   // Get id.
   const { id } = req.params;
 
-  // Create hashPassword.
-  const hashPassword = await bcrypt.hash(password, 10);
-
   // updateUser.
-  const user = await User.findByIdAndUpdate(
+  const updateUser = await User.findByIdAndUpdate(
     id,
     {
       name,
       email,
       mobile,
       gender,
-      password: hashPassword,
+      role,
     },
     { new: true }
   );
-  res.status(200).json(user);
+  res.status(200).json({ updateUser, message: "User updated successful." });
+});
+
+/**
+ * @desc UpdateUserStatus
+ * @method PUT/PATCH
+ * @route /api/v1/user/status/:id
+ * @access Public
+ */
+export const updateUserStatus = asyncHandler(async (req, res) => {
+  // Get Data.
+  const { status } = req.body;
+
+  // Get id.
+  const { id } = req.params;
+
+  // updateUser.
+  const updateStatus = await User.findByIdAndUpdate(
+    id,
+    {
+      status: !status,
+    },
+    { new: true }
+  );
+  res
+    .status(200)
+    .json({ updateStatus, message: "User status update successful." });
 });
