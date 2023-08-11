@@ -19,7 +19,7 @@ export const userLogin = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const loginUser = await User.findOne({ email });
+  const loginUser = await User.findOne({ email }).populate("role");
 
   if (!loginUser) {
     return res.status(404).json({ message: "User Not Found." });
@@ -47,14 +47,14 @@ export const userLogin = asyncHandler(async (req, res) => {
     }
   );
 
-  // Create refreshToken.
-  const refreshToken = jwt.sign(
-    { email: loginUser.email },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN,
-    }
-  );
+  // // Create refreshToken.
+  // const refreshToken = jwt.sign(
+  //   { email: loginUser.email },
+  //   process.env.REFRESH_TOKEN_SECRET,
+  //   {
+  //     expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN,
+  //   }
+  // );
 
   // AccessToken save in cookie mamory.
   res.cookie("accessToken", accessToken, {
@@ -131,7 +131,7 @@ export const userRegister = asyncHandler(async (req, res) => {
  * @access Public
  */
 export const loggedInUser = asyncHandler(async (req, res) => {
-  res.status(200).json(req.me);
+  res.status(200).json(req.me).populate("role");
 });
 
 /**

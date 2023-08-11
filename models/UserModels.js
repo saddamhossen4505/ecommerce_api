@@ -25,9 +25,9 @@ const userSchema = mongoose.Schema(
       trim: true,
     },
     role: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
       required: true,
-      default: "Author",
     },
     gender: {
       type: String,

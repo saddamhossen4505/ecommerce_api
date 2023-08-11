@@ -10,8 +10,7 @@ import { userInfoMail } from "../utils/userInfoMail.js";
  * @access Public
  */
 export const getAllUser = asyncHandler(async (req, res) => {
-  const users = await User.find();
-
+  const users = await User.find().populate("role");
   if (users.length > 0) {
     res.status(200).json({ users });
   }
@@ -66,7 +65,7 @@ export const createUser = asyncHandler(async (req, res) => {
   });
 
   userInfoMail(email, { name, password });
-
+  await user.populate("role");
   res.status(200).json({ user, message: "User created successful." });
 });
 
@@ -113,6 +112,8 @@ export const updateUser = asyncHandler(async (req, res) => {
     },
     { new: true }
   );
+  await updateUser.populate("role");
+
   res.status(200).json({ updateUser, message: "User updated successful." });
 });
 
@@ -136,7 +137,7 @@ export const updateUserStatus = asyncHandler(async (req, res) => {
       status: !status,
     },
     { new: true }
-  );
+  ).populate("role");
   res
     .status(200)
     .json({ updateStatus, message: "User status update successful." });
